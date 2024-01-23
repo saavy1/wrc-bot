@@ -32,16 +32,21 @@ api.listen(8080, 'localhost', async () => {
     console.log('API Listening on 8080')
 })
 
-api.post('/notify', async () => {
+api.post('/notify', async (req, res) => {
     const upcomingEvents = await wrcClient.fetchUpcomingSchedule()
 
     const embeds = scheduleEmbed(upcomingEvents, 'https://wrcfan.com/predict/')
 
-    const channel: Channel = client.channels.cache.get('325497330671550474')!
+    const channel: Channel = client.channels.cache.get(config.channelToNotify)!
 
     if (channel.isTextBased()) {
-        channel.send(`Upcoming event <@${config.myUserId}>, make your picks`)
+        const users = config.usersToNotify!.map((user) => ` <@${user}>`).join('')
+        channel.send(`Upcoming event${users}, make your picks`)
         channel.send(embeds)
+    
+        res.send({ 'result': 'okay' })
+    } else {
+        res.send({ 'result': 'bad' })
     }
 })
 
