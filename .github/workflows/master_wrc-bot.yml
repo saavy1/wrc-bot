@@ -42,8 +42,6 @@ jobs:
     environment:
       name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
-    permissions:
-      id-token: write #This is required for requesting the JWT
 
     steps:
       - name: Download artifact from build job
@@ -53,13 +51,6 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
-      
-      - name: Login to Azure
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_621F3E50F0774345B88B85C3FA1FC12A }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_B0F3EB8E554C4CF9BEA2F62CB704F459 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_BC7044296CED4CC08BD0DFC1E034D84D }}
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
@@ -67,5 +58,5 @@ jobs:
         with:
           app-name: 'WRC-Bot'
           slot-name: 'Production'
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_E451E313C6CB49B9B738501ED0B87388 }}
           package: .
-          
