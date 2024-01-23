@@ -2,7 +2,6 @@ import { Channel, Client, Events, GatewayIntentBits } from "discord.js";
 import { config } from './config'
 import { commands } from './commands/index'
 import express, { Application } from "express";
-import { Server } from './server'
 import { wrcClient } from "./wrc-api/wrc-client";
 import { scheduleEmbed } from "./embeds/schedule";
 
@@ -32,11 +31,11 @@ api.listen(8080, 'localhost', async () => {
 })
 
 api.post('/notify', async (req, res) => {
-    const apiKey = req.get('API-Key')
+    // const apiKey = req.get('API-Key')
 
-    if (!apiKey || apiKey !== config.apiKey) {
-        return res.status(401).json({error: 'unauthorized'})
-    }
+    // if (!apiKey || apiKey !== config.apiKey) {
+    //     return res.status(401).json({error: 'unauthorized'})
+    // }
 
     const upcomingEvents = await wrcClient.fetchUpcomingSchedule()
 

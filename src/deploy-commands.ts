@@ -5,13 +5,13 @@ import { config } from './config'
 
 const commandsData = Object.values(commands).map((command) => command.data)
 
-const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN!)
+const rest = new REST({ version: '10' }).setToken(config.token)
 
 type DeployCommandProps = {
     guildId: string
 }
 
-export async function deployCommands({ guildId}: DeployCommandProps) {
+export async function deployCommands({ guildId }: DeployCommandProps) {
     try {
         console.log('Started refreshing application (/] commands.')
 
@@ -28,4 +28,6 @@ export async function deployCommands({ guildId}: DeployCommandProps) {
     }
 }
 
-deployCommands({guildId: '253682071560519680'})
+for (const guildId of config.guildsToDeployTo) {
+    deployCommands({guildId: guildId})
+}
