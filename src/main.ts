@@ -31,7 +31,7 @@ api.listen(8080, async () => {
 })
 
 api.get('/health/liveness', (req, res) => {
-    return res.status(200).send()
+    return res.status(200).json({ healthy: true })
 })
 
 api.post('/notify', async (req, res) => {
