@@ -26,13 +26,18 @@ client.on('interactionCreate', async (interaction) => {
 })
 
 const api: Application = express()
-const server: Server = new Server(api)
 
 api.listen(8080, 'localhost', async () => {
     console.log('API Listening on 8080')
 })
 
 api.post('/notify', async (req, res) => {
+    const apiKey = req.get('API-Key')
+
+    if (!apiKey || apiKey !== config.apiKey) {
+        return res.status(401).json({error: 'unauthorized'})
+    }
+
     const upcomingEvents = await wrcClient.fetchUpcomingSchedule()
 
     const embeds = scheduleEmbed(upcomingEvents, 'https://wrcfan.com/predict/')
@@ -44,9 +49,9 @@ api.post('/notify', async (req, res) => {
         channel.send(`Upcoming event${users}, make your picks`)
         channel.send(embeds)
     
-        res.send({ 'result': 'okay' })
+        return res.status(200).json({ result: 'yay' })
     } else {
-        res.send({ 'result': 'bad' })
+        return res.status(500).json({ result: 'invalid channel ID' })
     }
 })
 
