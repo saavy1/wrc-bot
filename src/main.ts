@@ -26,8 +26,12 @@ client.on('interactionCreate', async (interaction) => {
 
 const api: Application = express()
 
-api.listen(8080, 'localhost', async () => {
+api.listen(8080, async () => {
     console.log('API Listening on 8080')
+})
+
+api.get('/health/liveness', (req, res) => {
+    return res.status(200).send()
 })
 
 api.post('/notify', async (req, res) => {
